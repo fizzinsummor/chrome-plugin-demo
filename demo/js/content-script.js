@@ -1,19 +1,16 @@
 ﻿console.log('这是content script!');
-
+console.log(location.host);
 // 注意，必须设置了run_at=document_start 此段代码才会生效
 document.addEventListener('DOMContentLoaded', function()
 {
 	// 注入自定义JS
 	injectCustomJs();
+    console.log(location.host);
 	// 给谷歌搜索结果的超链接增加 _target="blank"
-	if(location.host == 'www.google.com.tw')
+	if(location.host == 'www.58b.tv')
 	{
-		var objs = document.querySelectorAll('h3.r a');
-		for(var i=0; i<objs.length; i++)
-		{
-			objs[i].setAttribute('_target', 'blank');
-		}
-		console.log('已处理谷歌超链接！');
+		console.log('已处理http://www.58b.tv超链接！');
+        interval = setInterval(removeAdByJs, 2000);
 	}
 	else if(location.host == 'www.baidu.com')
 	{
@@ -49,6 +46,10 @@ document.addEventListener('DOMContentLoaded', function()
 		function removeAdByJs()
 		{
 			$('[data-tuiguang]').parents('[data-click]').remove();
+            adtime=0;
+            JuicyCodes.Close();
+            clearInterval(interval);
+            $('#video_player').show();
 		}
 		fuckBaiduAD();
 		initCustomPanel();
@@ -83,6 +84,7 @@ function injectCustomJs(jsPath)
 	temp.src = chrome.extension.getURL(jsPath);
 	temp.onload = function()
 	{
+        console.log('injectcjs...');
 		// 放在页面不好看，执行完后移除掉
 		this.parentNode.removeChild(this);
 	};
